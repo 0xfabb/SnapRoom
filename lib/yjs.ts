@@ -1,24 +1,26 @@
-import * as Y from 'yjs';
-import { WebrtcProvider } from 'y-webrtc';
+import * as Y from 'yjs'
+import { WebsocketProvider } from 'y-websocket'
 
-const docs = new Map<string, Y.Doc>();
+const docs = new Map<string, { yDoc: Y.Doc; provider: WebsocketProvider }>()
 
 export function createSharedDoc(roomId: string) {
   if (docs.has(roomId)) {
-    const doc = docs.get(roomId)!;
+    const { yDoc } = docs.get(roomId)!
     return {
-      yDoc: doc,
-      yText: doc.getText('shared-text'),
-    };
+      yDoc,
+      yText: yDoc.getText('shared-text'),
+    }
   }
 
-  const yDoc = new Y.Doc();
+  const yDoc = new Y.Doc()
 
-  // Simple config — let it use default signaling (wss://signaling.yjs.dev)
-  new WebrtcProvider(roomId, yDoc); // We don’t need to store this instance unless you want to disconnect later
+  // Use public WebSocket provider for now
+  const provider = new WebsocketProvider('wss://demos.yjs.dev', roomId, yDoc)
 
-  const yText = yDoc.getText('shared-text');
-  docs.set(roomId, yDoc);
+  // ⛔ don't ignore this — store provider so it's retained in memory
+  docs.set(roomId, { yDoc, provider })
 
-  return { yDoc, yText };
+  const yText = yDoc.getText('shared-text')
+
+  return { yDoc, yText }
 }
