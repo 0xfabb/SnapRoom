@@ -15,7 +15,7 @@ export function createSharedDoc(roomId: string) {
   const yDoc = new Y.Doc()
 
   // Use public WebSocket provider for now
-  const provider = new WebsocketProvider('wss://demos.yjs.dev', roomId, yDoc)
+  const provider = new WebsocketProvider('wss://snap-room.vercel.app', roomId, yDoc)
 
   // ⛔ don't ignore this — store provider so it's retained in memory
   docs.set(roomId, { yDoc, provider })
