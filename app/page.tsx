@@ -1,23 +1,24 @@
-'use client'
-import { useRouter } from 'next/navigation'
+// app/room/[id]/page.tsx
 
-export default function Home() {
-  const router = useRouter()
+'use client'; // Ensure this is marked as a client-side component
 
-  function handleCreateRoom() {
-    const roomId = Math.random().toString(36).substring(2, 8)
-    router.push(`/room/${roomId}`)
+import { useEffect, useState } from 'react';
+import RoomClient from '../app/room/[id]/RoomClient';
+
+// This is for handling dynamic routes properly
+export default function RoomPage({ params }: { params: { id: string } }) {
+  const [roomId, setRoomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Extract the roomId from params and update the state
+    if (params.id) {
+      setRoomId(params.id);
+    }
+  }, [params.id]);
+
+  if (!roomId) {
+    return <div>Loading...</div>; // You can render a loading state until roomId is available
   }
 
-  return (
-    <main className="flex flex-col items-center justify-center h-screen gap-4">
-      <h1 className="text-3xl font-bold">Welcome to SnapRoom</h1>
-      <button
-        onClick={handleCreateRoom}
-        className="bg-black text-white px-4 py-2 rounded"
-      >
-        Create SnapRoom
-      </button>
-    </main>
-  )
+  return <RoomClient roomId={roomId} />;
 }
