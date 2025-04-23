@@ -44,7 +44,7 @@ export default function Editor({ roomId }: { roomId: string }) {
       ref={textAreaRef}
       className="w-full h-64 border p-4 text-sm font-mono resize-none rounded-lg"
       value={content}
-      onChange={() => {}} // disabled because we're syncing manually
+      onChange={() => {}} 
       placeholder="Start typing..."
     />
   )

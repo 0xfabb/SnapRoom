@@ -1,24 +1,16 @@
-// app/room/[id]/page.tsx
+'use client';
 
-'use client'; // Ensure this is marked as a client-side component
+import dynamic from 'next/dynamic';
 
-import { useEffect, useState } from 'react';
-import RoomClient from '../app/room/[id]/RoomClient';
+const Editor = dynamic(() => import('../components/editor'), { ssr: false });
 
-// This is for handling dynamic routes properly
-export default function RoomPage({ params }: { params: { id: string } }) {
-  const [roomId, setRoomId] = useState<string | null>(null);
+export default function HomePage() {
+  const roomId = 'main'; // shared room for all users
 
-  useEffect(() => {
-    // Extract the roomId from params and update the state
-    if (params.id) {
-      setRoomId(params.id);
-    }
-  }, [params.id]);
-
-  if (!roomId) {
-    return <div>Loading...</div>; // You can render a loading state until roomId is available
-  }
-
-  return <RoomClient roomId={roomId} />;
+  return (
+    <main className="p-8">
+      <h1 className="text-2xl font-bold">SnapRoom – Shared Space</h1>
+      <Editor roomId={roomId} />
+    </main>
+  );
 }
