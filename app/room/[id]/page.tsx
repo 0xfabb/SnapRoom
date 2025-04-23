@@ -1,3 +1,5 @@
+'use client'; // Add this at the top of your file to mark this as a client component
+
 import { useEffect, useState } from 'react';
 import RoomClient from './RoomClient';
 
