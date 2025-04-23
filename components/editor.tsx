@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import * as Y from 'yjs'
 import { createSharedDoc } from '@/lib/yjs'
 
 export default function Editor({ roomId }: { roomId: string }) {
