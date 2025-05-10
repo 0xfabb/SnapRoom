@@ -42,7 +42,7 @@ export default function Editor({ roomId }: { roomId: string }) {
   return (
     <textarea
       ref={textAreaRef}
-      className="w-full h-64 border p-4 text-sm font-mono resize-none rounded-lg"
+      className="w-full lg:h-3/4 border p-4 text-sm font-mono resize-none rounded-lg"
       value={content}
       onChange={() => {}} 
       placeholder="Start typing..."
