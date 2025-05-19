@@ -3,12 +3,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { createSharedDoc } from '@/lib/yjs'
 
-export default function Editor({ roomId }: { roomId: string }) {
+export default function Editor({
+  roomId,
+  serverUrl,
+}: {
+  roomId: string
+  serverUrl: string
+}) {
   const [content, setContent] = useState('')
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
-    const { yText } = createSharedDoc(roomId)
+    const { yText } = createSharedDoc(roomId, serverUrl)
 
     // Sync: Yjs -> UI
     const updateFromYjs = () => {
@@ -16,9 +22,7 @@ export default function Editor({ roomId }: { roomId: string }) {
       setContent(newText)
     }
 
-    yText.observe(() => {
-      updateFromYjs()
-    })
+    yText.observe(updateFromYjs)
 
     // Sync once on mount
     updateFromYjs()
@@ -37,7 +41,7 @@ export default function Editor({ roomId }: { roomId: string }) {
     return () => {
       textarea?.removeEventListener('input', onInput)
     }
-  }, [roomId])
+  }, [roomId, serverUrl])
 
   return (
     <textarea

@@ -5,15 +5,16 @@ import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
 import { IconHome2, IconSettings } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+// Dynamically import the Editor (disabled SSR)
 const Editor = dynamic(() => import("../../components/editor"), { ssr: false });
 
 export default function HomePage() {
   const roomId = "main";
+  const serverUrl = "wss://your-custom-server.com"; // <-- Replace this with your deployed WebSocket server URL
 
   return (
     <Sidebar>
       <div className="sm:flex h-screen bg-black text-white overflow-hidden">
-        {/* Sidebar: renders Desktop + Mobile inside */}
         <SidebarBody className="sm:flex sm:justify-between">
           <div>
             <SidebarLink
@@ -40,10 +41,10 @@ export default function HomePage() {
           </div>
         </SidebarBody>
 
-        {/* Main content area */}
         <main className="flex-1 p-8 overflow-auto">
           <h1 className="text-2xl font-bold mb-4">SnapRoom - Shared Space</h1>
-          <Editor roomId={roomId} />
+          {/* Pass both roomId and serverUrl to Editor */}
+          <Editor roomId={roomId} serverUrl={serverUrl} />
         </main>
       </div>
     </Sidebar>
