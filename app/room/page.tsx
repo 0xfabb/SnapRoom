@@ -217,7 +217,6 @@ export default function HomePage() {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -256,19 +255,22 @@ export default function HomePage() {
       setRoom(null);
     };
   };
-  
-const removeEnd = () => {
-  const confirmDelete = confirm("Do you want to delete the temporary room? This action is irreversible.");
-  if (!confirmDelete) return;
 
-  localStorage.removeItem("roomInfo");
-  localStorage.removeItem("chatMessages");
+  const removeEnd = () => {
+    const confirmDelete = confirm(
+      "Do you want to delete the temporary room? This action is irreversible."
+    );
+    if (!confirmDelete) return;
 
-  // Trigger useEffect re-run
-  setRoom(null);
-  setMessages([]);
-  setRefreshTrigger((prev) => prev + 1);
-};
+    setTimeout(() => {
+      localStorage.removeItem("roomInfo");
+      localStorage.removeItem("chatMessages");
+      setRoom(null);
+      setMessages([]);
+      setRefreshTrigger((prev) => prev + 1);
+    }, 800);
+
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("roomInfo");
@@ -276,9 +278,9 @@ const removeEnd = () => {
 
     if (!saved) return;
     const { roomId: roomId, name: name, type: type } = JSON.parse(saved);
-    
+
     console.log(roomId, name, type);
-    
+
     const socket = new WebSocket(serverUrl);
 
     socket.onopen = () => {
@@ -334,7 +336,6 @@ const removeEnd = () => {
     setMessage("");
   };
 
-
   return (
     <Sidebar>
       <div className="sm:flex h-screen bg-black text-white overflow-hidden">
@@ -360,24 +361,28 @@ const removeEnd = () => {
         <main className="flex-1 p-6 overflow-auto">
           <div className="flex justify-between">
             <h1 className="text-2xl font-bold mb-6">SnapRoom – {roomId}</h1>
-            <Button onClick={removeEnd} className="bg-red-500">
-              Leave Room
-            </Button>
+            {room ? (
+              <Button onClick={removeEnd} className="bg-red-500">
+                Leave Room
+              </Button>
+            ) : (
+              <></>
+            )}
           </div>
 
           {!room ? (
             <div className="flex flex-col sm:flex-row gap-4 max-w-lg">
               <input
-                className="p-3 rounded bg-gray-800 placeholder-gray-400"
+                className="p-3 rounded bg-stone-900 placeholder-gray-400"
                 placeholder="Your name"
                 onChange={(e) => setName(e.target.value)}
               />
               <input
-                className="p-3 rounded bg-gray-800 placeholder-gray-400"
+                className="p-3 rounded bg-stone-900 placeholder-gray-400"
                 placeholder="Room ID"
                 onChange={(e) => setRoomId(e.target.value)}
               />
-              <Button className="bg-purple-600" onClick={joinRoom}>
+              <Button className="bg-purple-600 mt-1.5" onClick={joinRoom}>
                 Join / Create
               </Button>
             </div>
