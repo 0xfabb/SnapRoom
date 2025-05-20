@@ -1,191 +1,3 @@
-// "use client";
-
-// import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
-// import { IconHome2, IconSettings } from "@tabler/icons-react";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { useState, useEffect } from "react";
-// import { Button } from "@/components/ui/button";
-
-// export default function HomePage() {
-//   const serverUrl = "wss://chat-backend-g-hunt.up.railway.app";
-//   const [roomId, setRoomId] = useState("");
-//   const [room, setRoom] = useState<WebSocket | null>(null);
-//   const [type, setType] = useState("intro");
-//   const [name, setName] = useState("");
-//   const [message, setMessage] = useState("");
-//   const [messages, setMessages] = useState<string[]>([]);
-
-//   class Person {
-//     RoomId: string;
-//     Name: string;
-//     Type: string;
-//     constructor(RoomId: string, Name: string, Type: string) {
-//       this.Name = Name;
-//       this.RoomId = RoomId;
-//       this.Type = Type;
-//     }
-//   }
-// const setupSocketListeners = (socket: WebSocket) => {
-//   socket.onmessage = (event) => {
-//     try {
-//       const parsed = JSON.parse(event.data);
-//       const { Name, data } = parsed;
-//       const label = Name === name ? "You" : Name;
-//       setMessages((prev) => [...prev, { sender: label, text: data }]);
-//     } catch {
-//       // Fallback if data is just a string
-//       setMessages((prev) => [...prev, { sender: "Server", text: event.data }]);
-//     }
-//   };
-
-//   socket.onerror = (err) => {
-//     console.error("WebSocket error:", err);
-//     localStorage.removeItem("roomInfo");
-//     setRoom(null);
-//   };
-// };
-
-//   useEffect(() => {
-//     const existingRoom = localStorage.getItem("roomInfo");
-//     if (existingRoom) {
-//       const { roomId, name, type } = JSON.parse(existingRoom);
-
-//       const socket = new WebSocket(serverUrl);
-
-//       socket.onopen = () => {
-//         const data = new Person(roomId, name, type);
-//         socket.send(JSON.stringify(data));
-//         setRoom(socket);
-//         setRoomId(roomId);
-//         setName(name);
-//         setType(type);
-
-//         // ✅ Attach listeners here
-//         setupSocketListeners(socket);
-
-//         console.log("Reconnected to room:", roomId);
-//       };
-
-//       socket.onerror = (err) => {
-//         console.error("WebSocket reconnect error:", err);
-//         localStorage.removeItem("roomInfo");
-//         setRoom(null);
-//       };
-//     }
-//   }, []);
-
-//   const JoinAroom = async () => {
-//     try {
-//       const socket = new WebSocket(serverUrl);
-
-//       socket.onopen = () => {
-//         const data = new Person(roomId, name, type);
-//         socket.send(JSON.stringify(data));
-
-//         setRoom(socket);
-//         setupSocketListeners(socket);
-
-//         setType("");
-//         localStorage.setItem(
-//           "roomInfo",
-//           JSON.stringify({ roomId, name, type })
-//         );
-//       };
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   const sendTexts = async () => {
-//     if (room && message.trim()) {
-//       room.send(JSON.stringify({ Name: name, data: message, roomId: roomId }));
-//       setMessages((prev) => [...prev, `You: ${message}`]);
-//       setMessage("");
-//     }
-//   };
-
-//   return (
-//     <Sidebar>
-//       <div className="sm:flex h-screen bg-black text-white overflow-hidden">
-//         <SidebarBody className="sm:flex sm:justify-between">
-//           <div>
-//             <SidebarLink
-//               link={{
-//                 href: "/room",
-//                 label: "Home",
-//                 icon: <IconHome2 className="text-white" />,
-//               }}
-//             />
-//             <SidebarLink
-//               link={{
-//                 href: "/settings",
-//                 label: "Settings",
-//                 icon: <IconSettings className="text-white" />,
-//               }}
-//             />
-//           </div>
-
-//           <div>
-//             <Avatar>
-//               <AvatarImage src="https://github.com/shadcn.png" />
-//               <AvatarFallback>CN</AvatarFallback>
-//             </Avatar>
-//           </div>
-//         </SidebarBody>
-
-//         <main className="flex-1 p-8 overflow-auto">
-//           <h1 className="text-2xl font-bold mb-4">SnapRoom - {roomId}</h1>
-//           {!room ? (
-//             <div className="flex gap-12">
-//               <input
-//                 onChange={(e) => setName(e.target.value)}
-//                 placeholder="Your Name"
-//                 type="text"
-//               />
-//               <input
-//                 onChange={(e) => setRoomId(e.target.value)}
-//                 placeholder="Enter a Room Id"
-//                 type="text"
-//               />
-//               <Button onClick={JoinAroom} className="bg-red-500">
-//                 Join or Create your own room!
-//               </Button>
-//             </div>
-//           ) : (
-//             <>
-//               <div className="mt-6 bg-black p-4 rounded max-h-96 overflow-auto">
-//                 {messages.map((msg, index) => (
-//                   <div key={index} className="mb-2 text-white">
-//                     {msg}
-//                   </div>
-//                 ))}
-//               </div>
-//               <div className="flex gap-1 ">
-//                 <input
-//                   onChange={(e) => {
-//                     setMessage(e.target.value);
-//                   }}
-//                   value={message}
-//                   className="p-2 m-3 text-white border-2 rounded-xl"
-//                   placeholder="Send a Message on your room"
-//                   type="text"
-//                 />
-//                 <Button
-//                   disabled={!message.trim()}
-//                   onClick={sendTexts}
-//                   className=" rounded-xl mt-4 bg-blue-400"
-//                 >
-//                   Send
-//                 </Button>
-//               </div>
-//             </>
-//           )}
-//         </main>
-//       </div>
-//     </Sidebar>
-//   );
-// }
-
 "use client";
 
 import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
@@ -269,7 +81,6 @@ export default function HomePage() {
       setMessages([]);
       setRefreshTrigger((prev) => prev + 1);
     }, 800);
-
   };
 
   useEffect(() => {
@@ -353,8 +164,8 @@ export default function HomePage() {
             />
           </div>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src="" />
+            <AvatarFallback>{name}</AvatarFallback>
           </Avatar>
         </SidebarBody>
 
@@ -362,7 +173,7 @@ export default function HomePage() {
           <div className="flex justify-between">
             <h1 className="text-2xl font-bold mb-6">SnapRoom – {roomId}</h1>
             {room ? (
-              <Button onClick={removeEnd} className="bg-red-500">
+              <Button onClick={removeEnd} className="bg-red-500 cursor-pointer">
                 Leave Room
               </Button>
             ) : (
@@ -371,28 +182,40 @@ export default function HomePage() {
           </div>
 
           {!room ? (
-            <div className="flex flex-col sm:flex-row gap-4 max-w-lg">
+            <>
+              <h1 className="text-center font-bold font-sans text-2xl mb-12">Create or Join a Private Space</h1>
+            <div className="flex flex-col sm:flex-row items-stretch gap-4 max-w-2xl mx-auto p-4 bg-zinc-900 rounded-2xl shadow-xl">
               <input
-                className="p-3 rounded bg-stone-900 placeholder-gray-400"
+              value={name}
+                className="flex-1 min-w-[200px] px-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 placeholder="Your name"
                 onChange={(e) => setName(e.target.value)}
-              />
+                />
               <input
-                className="p-3 rounded bg-stone-900 placeholder-gray-400"
+              value={roomId}
+                className="flex-1 min-w-[200px] px-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 placeholder="Room ID"
                 onChange={(e) => setRoomId(e.target.value)}
-              />
-              <Button className="bg-purple-600 mt-1.5" onClick={joinRoom}>
+                />
+              <Button
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold mt-2  transition w-full sm:w-auto"
+                onClick={joinRoom}
+                >
                 Join / Create
               </Button>
             </div>
+                </>
           ) : (
             <>
-              <div className="bg-gray-900 p-4 rounded-lg h-96 overflow-y-auto space-y-3">
+              <div className="bg-zinc-900 p-4 rounded-lg h-[500px] overflow-y-auto space-y-3">
+                <p className="text-center opacity-20 mb-2">
+                  Warning: This chat is temporary. Avoid sharing sensitive info,
+                  and copy your data before closing.
+                </p>
                 {messages.map((m, i) => (
                   <div key={i}>
                     <div
-                      className={`max-w-xs px-4 py-2 rounded-xl text-sm break-words ${
+                      className={`mt-5 max-w-xs px-4 py-2 rounded-xl text-sm break-words ${
                         m.sender === "You"
                           ? "bg-blue-600 text-white"
                           : "bg-gray-700 text-white"
@@ -414,12 +237,12 @@ export default function HomePage() {
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendMsg()}
                   placeholder="Type a message…"
-                  className="flex-1 p-3 rounded-lg bg-gray-800 placeholder-gray-400"
+                  className="flex-1 p-3 rounded-lg bg-zinc-900 placeholder-gray-400"
                 />
                 <Button
                   disabled={!message.trim()}
                   onClick={sendMsg}
-                  className="bg-blue-500"
+                  className="bg-blue-500 p-5.5 mb-1 cursor-pointer"
                 >
                   Send
                 </Button>
