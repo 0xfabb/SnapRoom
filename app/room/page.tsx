@@ -194,7 +194,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 
-
 type ChatMsg = { sender: string; text: string };
 
 class Person {
@@ -216,6 +215,8 @@ export default function HomePage() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMsg[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -223,36 +224,51 @@ export default function HomePage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-const setupSocketListeners = (socket: WebSocket) => {
-  socket.onmessage = (event: MessageEvent) => {
-    try {
-      const parsed = JSON.parse(event.data);
+  const setupSocketListeners = (socket: WebSocket) => {
+    socket.onmessage = (event: MessageEvent) => {
+      try {
+        const parsed = JSON.parse(event.data);
 
-      // CASE 1: Full structured message from backend
-      if (typeof parsed === "object" && parsed.Name && parsed.data) {
-        const sender = parsed.Name === name ? "You" : parsed.Name;
-        const text = parsed.data;
-        setMessages((prev) => [...prev, { sender, text }]);
-      }
-      // CASE 2: Backend just sends a string like `"Hello"`
-      else if (typeof parsed === "string") {
-        setMessages((prev) => [...prev, { sender: "Unknown", text: parsed }]);
-      }
-    } catch (e) {
-      console.log(e);
-      
-      // CASE 3: Data wasn't JSON at all
-      setMessages((prev) => [...prev, { sender: "Unknown", text: event.data }]);
-    }
-  };
+        // CASE 1: Full structured message from backend
+        if (typeof parsed === "object" && parsed.Name && parsed.data) {
+          const sender = parsed.Name === name ? "You" : parsed.Name;
+          const text = parsed.data;
+          setMessages((prev) => [...prev, { sender, text }]);
+        }
+        // CASE 2: Backend just sends a string like `"Hello"`
+        else if (typeof parsed === "string") {
+          setMessages((prev) => [...prev, { sender: "Unknown", text: parsed }]);
+        }
+      } catch (e) {
+        console.log(e);
 
-  socket.onerror = (err) => {
-    console.error("WebSocket error:", err);
-    localStorage.removeItem("roomInfo");
-    setRoom(null);
+        // CASE 3: Data wasn't JSON at all
+        setMessages((prev) => [
+          ...prev,
+          { sender: "Unknown", text: event.data },
+        ]);
+      }
+    };
+
+    socket.onerror = (err) => {
+      console.error("WebSocket error:", err);
+      localStorage.removeItem("roomInfo");
+      setRoom(null);
+    };
   };
+  
+const removeEnd = () => {
+  const confirmDelete = confirm("Do you want to delete the temporary room? This action is irreversible.");
+  if (!confirmDelete) return;
+
+  localStorage.removeItem("roomInfo");
+  localStorage.removeItem("chatMessages");
+
+  // Trigger useEffect re-run
+  setRoom(null);
+  setMessages([]);
+  setRefreshTrigger((prev) => prev + 1);
 };
-
 
   useEffect(() => {
     const saved = localStorage.getItem("roomInfo");
@@ -260,9 +276,9 @@ const setupSocketListeners = (socket: WebSocket) => {
 
     if (!saved) return;
     const { roomId: roomId, name: name, type: type } = JSON.parse(saved);
-
+    
     console.log(roomId, name, type);
-
+    
     const socket = new WebSocket(serverUrl);
 
     socket.onopen = () => {
@@ -276,7 +292,7 @@ const setupSocketListeners = (socket: WebSocket) => {
       setupSocketListeners(socket);
       console.log("Reconnected to room:", roomId);
     };
-  }, []);
+  }, [refreshTrigger]);
 
   const joinRoom = () => {
     if (!roomId.trim() || !name.trim()) return;
@@ -318,6 +334,7 @@ const setupSocketListeners = (socket: WebSocket) => {
     setMessage("");
   };
 
+
   return (
     <Sidebar>
       <div className="sm:flex h-screen bg-black text-white overflow-hidden">
@@ -341,7 +358,12 @@ const setupSocketListeners = (socket: WebSocket) => {
         </SidebarBody>
 
         <main className="flex-1 p-6 overflow-auto">
-          <h1 className="text-2xl font-bold mb-6">SnapRoom – {roomId}</h1>
+          <div className="flex justify-between">
+            <h1 className="text-2xl font-bold mb-6">SnapRoom – {roomId}</h1>
+            <Button onClick={removeEnd} className="bg-red-500">
+              Leave Room
+            </Button>
+          </div>
 
           {!room ? (
             <div className="flex flex-col sm:flex-row gap-4 max-w-lg">
@@ -362,10 +384,8 @@ const setupSocketListeners = (socket: WebSocket) => {
           ) : (
             <>
               <div className="bg-gray-900 p-4 rounded-lg h-96 overflow-y-auto space-y-3">
-                {messages.map((m,i) => (
-                  <div
-                    key={i}
-                  >
+                {messages.map((m, i) => (
+                  <div key={i}>
                     <div
                       className={`max-w-xs px-4 py-2 rounded-xl text-sm break-words ${
                         m.sender === "You"
