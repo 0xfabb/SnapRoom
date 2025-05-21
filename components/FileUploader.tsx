@@ -1,5 +1,7 @@
 import { Client, Storage, ID } from "appwrite";
 import React, { useEffect, useRef, useState } from "react";
+import { Button } from "./ui/button";
+import {Paperclip} from "lucide-react"
 
 const EndPoint = process.env.NEXT_PUBLIC_ENDPOINT ?? "";
 const Project = process.env.NEXT_PUBLIC_PROJECT ?? "";
@@ -58,13 +60,13 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onFileSelect, sendMe
 
   return (
     <div className="flex items-center gap-2">
-      <button
+      <Button
         type="button"
         onClick={handleClick}
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-green-700 transition"
       >
-       File
-      </button>
+        <Paperclip />
+      </Button>
 
       <input
         id="input"

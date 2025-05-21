@@ -297,7 +297,7 @@ export default function HomePage() {
                           onClick={() => {
                             window.open(m.url, "_blank");
                           }}
-                          className="mt-2 bg-red-400"
+                          className="m-3 bg-red-400"
                         >
                           Download File
                         </Button>
@@ -309,16 +309,16 @@ export default function HomePage() {
               </div>
 
               <div className="flex gap-2  items-center mt-4">
-                <FileUploader
-                  onFileSelect={handleFileSelect}
-                  sendMessageToWS={sendMessageToWS}
-                />
                 <input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendMsg()}
                   placeholder="Type a message…"
                   className="flex-1 p-3 rounded-lg bg-zinc-900 placeholder-gray-400"
+                />
+                <FileUploader
+                  onFileSelect={handleFileSelect}
+                  sendMessageToWS={sendMessageToWS}
                 />
                 <Button
                   disabled={!message.trim()}
