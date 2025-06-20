@@ -1,36 +1,149 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  SnapRoom
 
-## Getting Started
+**SnapRoom** is a real-time, private collaboration space that lets users create temporary rooms to chat, share files, and optionally save their conversations. No login. No friction. Just enter your name and room name — and you're in!
 
-First, run the development server:
+Built with **Next.js**, **Yjs**, **WebSocket**, and deployed on **Vercel** and **Railway**, SnapRoom offers a blazing-fast, minimal, and powerful team communication tool for the web.
+
+---
+
+## ✨ Features
+
+- 🔒 **Private Rooms**: Anyone with the room name can join — others can’t see your space.
+- 🧠 **Real-Time Messaging**: All users in a room can see messages instantly via WebSockets.
+- 📂 **File Sharing** _(coming soon)_: Upload and share files (images, docs, etc.) that are instantly visible to others in the room.
+- 💾 **Save Your Room** _(coming soon)_: Persist the chat and file history to a database, so it can be accessed again using the same room ID.
+- ⚡ **Zero Setup**: No login. No sign up. Just type your name and room ID to get started.
+- ☁️ **Deployed on Vercel (frontend) and Railway (backend)**
+
+---
+
+## 📸 Preview
+
+![SnapRoom Preview](./preview.png)
+
+---
+
+## 🧠 Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), Tailwind CSS, shadcn/ui
+- **Realtime Engine**: Yjs + custom WebSocket signaling server
+- **WebSocket Backend**: Node.js + Express + `ws`
+- **File Storage & Persistence**: Appwrite or Supabase (WIP)
+- **Deployment**:
+  - Vercel (Next.js frontend)
+  - Railway (WebSocket backend)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/0xfabb/SnapRoom.git
+cd SnapRoom
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Run locally
+
+#### 🖥️ Frontend (Next.js)
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### 🔌 Backend (WebSocket Server)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Go to the `/ws-server` folder:
 
-## Learn More
+```bash
+cd ws-server
+npm install
+node index.js
+```
 
-To learn more about Next.js, take a look at the following resources:
+Make sure it's running on `ws://localhost:8080`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔧 Project Structure
 
-## Deploy on Vercel
+```
+/app
+  /room/[id]     → Room-based routing using Next.js App Router
+/components
+  editor.tsx     → Shared real-time text editor using Yjs
+  ui/            → Reusable shadcn/ui components
+/lib
+  yjs.ts         → WebRTC provider + Yjs logic
+/ws-server
+  index.js       → Node.js WebSocket backend
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔐 Environment Variables
+
+Frontend:
+
+```env
+NEXT_PUBLIC_WS_SERVER_URL=wss://snaproom-production.up.railway.app
+```
+
+Backend (optional if you're integrating file uploads or DB persistence):
+
+```env
+APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+APPWRITE_PROJECT_ID=...
+APPWRITE_API_KEY=...
+```
+
+---
+
+## 🛠 Upcoming Features
+
+- ✅ Room-based real-time messaging
+- ⏳ File Upload & Sharing (in progress)
+- ⏳ Save Room to DB with metadata & restore capability
+- ⏳ Typing indicators & user avatars
+- ⏳ Admin panel for rooms
+- ⏳ Invite links
+
+---
+
+## 💡 Use Cases
+
+- Private team discussions
+- Remote study group
+- Anonymous collaboration
+- Quick project brainstorms
+- Real-time code/text sharing without signup
+
+---
+
+## 🧑‍💻 Author
+
+Made with ❤️ by [Vansh Khanna (0xfabb)](https://github.com/0xfabb)
+
+> “Launch fast. Build fast. Think fast.”
+
+---
+
+## 📜 License
+
+MIT
+
+---
+
+## 🧭 Live Demo
+
+**Frontend**: [https://snap-room.vercel.app](https://snap-room.vercel.app)  
+**WebSocket Server**: Deployed on Railway at `wss://snaproom-production.up.railway.app`
