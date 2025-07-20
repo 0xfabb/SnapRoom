@@ -63,7 +63,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onFileSelect, sendMe
       <Button
         type="button"
         onClick={handleClick}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-green-700 transition"
+        className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-white rounded hover:bg-green-700 transition"
       >
         <Paperclip />
       </Button>
